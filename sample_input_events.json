@@ -7,18 +7,18 @@
     },
     {
         "order_id": 2,
-        "user_id": 102,
+        "user_id": -102, (incorrect data -> negative)
         "order_value": 150.0,
         "timestamp": "2025-03-01T10:05:00Z"
     },
     {
         "order_id": 3,
         "user_id": 103,
-        "order_value": 10000.0,
+        "order_value": 10000.0, (incorrect data -> too large)
         "timestamp": "2025-03-01T10:10:00Z"
     },
     {
-        "order_id": 4,
+        "order_id": 4, (assume this event is missed by the consumer)
         "user_id": 104,
         "order_value": 300.0,
         "timestamp": "2025-03-01T10:15:00Z"
