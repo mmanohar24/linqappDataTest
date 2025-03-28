@@ -57,8 +57,13 @@ def consume_and_reprocess_events():
             # Send recalculated event to output topic
             producer.send(output_topic, value={'original_event': event, 'recalculated_value': result})
             logger.info(f"Recalculated event: {event} -> {result}")
+            # This commits the offset so we don't reprocess it
+            consumer.commit()  
+
         else:
             logger.warning(f"Skipping recalculation for event: {event}")
+            # Commit the offset to keep track of which events were processed
+            consumer.commit()
 
     consumer.close()
     producer.close()
