@@ -1,5 +1,5 @@
 # LinqappDataTest
-Linq Data Candidate Take-Home Test
+Linq Data Take-Home Test
 
 ## Problem Statement
 
@@ -9,7 +9,7 @@ In an event-driven system, a worker service processes real-time events from Kafk
 
 1. The system is based on Kafka or a similar message queue.
 2. Each event has a timestamp and a unique identifier.
-3. The worker service follows an at-least-one processing model, which reduces the chances of data loss.
+3. The worker service follows an at-least-once processing model, which reduces the chances of data loss.
 4. The error may have been caused by failures during processing or missing messages.
 
 ## High-Level Solution
@@ -18,36 +18,32 @@ To solve this, I need to:
 
 1. Identify the events that were either missed or processed incorrectly.
 2. Use Kafka's built-in replay mechanisms to retrieve historical events.
-3. Reset the consumer offsets to reprocess these missed events.
-4. Recalculate the results, ensuring accuracy by deduplicating and verifying the final outcomes.
+3. Reset the consumer offsets to reprocess these missed or incorrect events.
 
 ## Recovery & Recalculation
 
 1. **Missed Events**: By resetting the Kafka consumer offset, I can replay events starting from a previous timestamp, ensuring I don’t miss anything.
 2. **Incorrectly Processed Events**: If there were calculation errors, I can reprocess the original events and apply the necessary corrections.
-3. **Deduplication**: To prevent processing the same event multiple times, I need to ensure that the system is idempotent - meaning it processes the same event only once, no matter how many times it's triggered.
 
 ## Tools & Strategies (Kafka + Consumer Offset Reset)
 
 1. **Kafka Retention & Replay**: Kafka retains events for a specified period, allowing me to replay past events that were missed or incorrectly processed.
 2. **Consumer Offset Reset**: By resetting the consumer group's offset, I can instruct Kafka to start reading from a specific point, which helps recover lost or wrongly processed data.
-3. **Idempotency & Checkpointing**: To maintain accuracy and avoid unnecessary reprocessing, I’ll track events I’ve already handled and save the offsets of successfully processed events.
 
 ## Ensuring Accuracy & Consistency
 
 1. **Logging & Monitoring**: It's crucial to monitor reprocessed events and check if the recalculations are consistent.
 2. **Checkpointing**: By saving the offsets of processed events, I can avoid reprocessing events multiple times.
-3. **Cross-Validation**: After recalculating the results, I will compare them with the expected outputs to make sure everything adds up.
 
 ## Code Snippet (Automating with Kafka)
 
-To recover and recalculate the missed or incorrect data, *I have* implemented the following solution:
+To recover and recalculate the missed or incorrect data, I have implemented the following solution:
 
 1. **Resetting the consumer offset**: This allows us to reprocess the missed events.
 2. **Handling recalculations for incorrect events**: If events were processed incorrectly, we can apply the necessary corrections.
-3. **Ensuring deduplication**: This prevents reprocessing of events that have already been handled.
 
-This script will reset the consumer group’s offset, instructing it to reprocess past events. While Kafka also offers command-line tools like `kafka-consumer-groups.sh --reset-offsets` for manual resets, the code in `event_reprocessor.py` automates the entire process.
+The script named `event_reprocessor.py` will reset the consumer group’s offset, instructing it to reprocess past events. 
+While Kafka also offers command-line tools like `kafka-consumer-groups.sh --reset-offsets` for manual resets, my code automates the entire process.
 
 ## Summary & Justification
 
