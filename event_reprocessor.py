@@ -25,13 +25,18 @@ def reset_offset(consumer, topic, group_id):
 
 def process_event(event):
     try:
-        # Dummy processing logic, replace with actual business logic
-        if event['value'] < 0:
-            raise ValueError("Incorrect data detected")
-        return event['value'] * 2  # Sample recalculation logic
+        # Check for negative order values (assuming negative values are incorrect)
+        if event['order_value'] < 0:
+            raise ValueError("Incorrect data: negative value detected")
+        
+        # Check for extremely high order values (another incorrect data)
+        if event['order_value'] >= 10000:
+            raise ValueError(f"Incorrect data: value exceeds 10,000 in event {event['order_id']}")
+
+        return event['order_value'] * 2  # Sample recalculation logic
     except Exception as e:
-        logger.error(f"Error processing event {event}: {e}")
-        return None  # Returning None indicates that recalculation was not successful
+        logger.error(f"Error processing event {event['order_id']}: {e}")
+        return None
 
 def consume_and_reprocess_events():
     consumer = KafkaConsumer(input_topic, bootstrap_servers=bootstrap_servers, group_id=consumer_group)
