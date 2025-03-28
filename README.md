@@ -78,3 +78,10 @@ To ensure scalability when processing millions of events per hour, I can:
 4. Continuously monitor system performance and auto-scale resources during peak loads.
 
 These strategies will help me maintain performance while handling large event volumes efficiently.
+
+## P.S.
+
+## P.S.
+
+As part of the problem-solving process, I leveraged AI tools to help streamline my approach and ensure the solution was both efficient and accurate. 
+I believe utilizing modern technologies like AI is an essential part of the industry, and I wanted to make the most of them while ensuring the final implementation and decisions were entirely my own.
